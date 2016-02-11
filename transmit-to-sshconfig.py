@@ -9,6 +9,8 @@ import unicodedata,re
 
 def slugify(str):
     slug = unicodedata.normalize("NFKD",unicode(str)).encode("ascii", "ignore")
+    slug = re.sub("\(", "[", slug)
+    slug = re.sub("\)", "]", slug)
     slug = re.sub(r"/[^\w]+", " ", slug)
     slug = "-".join(slug.lower().strip().split())
     return slug
