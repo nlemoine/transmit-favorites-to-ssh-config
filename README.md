@@ -41,3 +41,7 @@ These favorites will be converted to these HostNames:
 And will appear as shown above in [Shuttle](http://fitztrev.github.io/shuttle/): 
 
 ![Transmit SFTP favorites SSH config](http://benkey.free.fr/transmit-to-sshconfig.png)
+
+## Support
+
+This is my first python script, feel free to fork it and make it better. 
