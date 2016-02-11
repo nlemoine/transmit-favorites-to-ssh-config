@@ -14,9 +14,11 @@ chmod +x transmit-to-sshconfig.py
 ./transmit-to-sshconfig.py
 ```
 
-**Warning! this will overwrite your existing SSH config file.**
+**Warning! This will overwrite your existing SSH config file.**
 
 ## Notes
+
+Only SFTP favorites are added to the SSH config file. 
 
 HostNames are slugified and formatted to play nice with the excellent [Shuttle](http://fitztrev.github.io/shuttle/) app. 
 
