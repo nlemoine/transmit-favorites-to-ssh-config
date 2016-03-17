@@ -2,7 +2,7 @@
 
 This little tool is born because I was bored to keep both my SSH config file and Transmit favorites in sync, filling twice the same informations over and over. 
 
-This script converts all your [Transmit](https://panic.com/transmit/) SFTP favorites into an SSH config file. 
+This script converts all your [Transmit](https://panic.com/transmit/) SFTP favorites into an SSH config file.
 
 ## Usage
 
@@ -14,7 +14,11 @@ chmod +x transmit-to-sshconfig.py
 ./transmit-to-sshconfig.py
 ```
 
-**Warning! This will overwrite your existing SSH config file.**
+If you don't have an ssh config file, it will be created for you. 
+
+If you already have one, hosts from Transmit favorites will be appended to your existing file.
+
+If host already exists, it will be skipped.
 
 ## Notes
 

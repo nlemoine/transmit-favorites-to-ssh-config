@@ -79,15 +79,14 @@ favorites_file = ET.parse(user_dir + '/Library/Application Support/Transmit/Favo
 favorites      = favorites_file.findall('./object[@type="FAVORITE"]')
 sshconfig_file = user_dir + '/.ssh/config';
 
-
-if query_yes_no("This script will add all your Transmit SFTP favorites to your SSH config file and erase the current file located in %s, do you want to continue?" % sshconfig_file) is False:
+if query_yes_no("This script will add all your Transmit SFTP favorites to your SSH config file located in %s, do you want to continue?" % sshconfig_file) is False:
 	printout("[info]	", GREEN)
-	print "Script aborted"
+	print "Import aborted, no Transmit favorites have been added"
 	sys.exit(0)
 
-sshconfig      = open(sshconfig_file, 'w')
+sshconfig = open(sshconfig_file, 'a+')
 
-for favorite in favorites:
+for i, favorite in enumerate(favorites):
 
 	attributes = favorite.findall('./attribute[@name="protocol"]')
 	has_sftp = False
@@ -99,16 +98,19 @@ for favorite in favorites:
 	if has_sftp is False:
 		continue
 
-	collection_id   = favorite.find('./relationship[@name="collection"]').get('idrefs')
-	collection_name = favorites_file.find("./object[@id='%s']/attribute[@name='name']" % collection_id).text
+	collection_id = favorite.find('./relationship[@name="collection"]').get('idrefs')
+	collection    = favorites_file.find("./object[@id='%s']" % collection_id)
+
+	# Skip history
+	if collection.get('type') == 'HISTORYCOLLECTION':
+		continue;
+
+	collection_name = collection.find("attribute[@name='name']").text
 
 	host            = slugify(collection_name.lower() + '/' + favorite.find('./attribute[@name="nickname"]').text)
 	hostname        = favorite.find('./attribute[@name="server"]').text
 	port            = int(favorite.find('./attribute[@name="port"]').text)
 	user            = favorite.find('./attribute[@name="username"]').text
-
-	printout("[info]	", GREEN)
-	print "Adding %s" % host
 
 	item = [
 		"Host %s" % host,
@@ -119,10 +121,24 @@ for favorite in favorites:
 	]
 
 	# Remove port if not set
-	if( port <= 0 ):
+	if port <= 0 :
 		item.pop(2)
 
-	sshconfig.write('\n'.join(item).encode('utf8'))
+	if i == 1:
+		sshconfig.write('\n')
+
+	# Skip if item is already in file
+	item_line = '\n'.join(item).encode('utf8')
+	sshconfig.seek(0)
+	if item_line in sshconfig.read():
+		printout("[info]	", YELLOW)
+		print "Skipped %s: already found in file" % host
+		continue
+
+	# Write item to file
+	sshconfig.write(item_line)
+	printout("[info]	", GREEN)
+	print "Added %s" % host
 
 sshconfig.close()
 
