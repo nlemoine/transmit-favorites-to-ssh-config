@@ -1,3 +1,7 @@
+# DEPRECATED
+
+This script has been rewritten in JavaScript and has moved to https://github.com/nlemoine/transmit-2-ssh-config
+
 # Transmit favorites to SSH config
 
 This little tool is born because I was bored to keep both my SSH config file and Transmit favorites in sync, filling twice the same informations over and over. 
